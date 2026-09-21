@@ -1,0 +1,68 @@
+name: AI Coding CI
+
+# 把本地安全门禁固化为云端检查：无论在哪台机器/谁提交，PR 和 main 都会强制执行同一套检查。
+# 覆盖 AI Coding 流程的「先测试再代码」+「安全贯穿全程」两道门禁。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Unit tests (TDD)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - name: Run jest suite
+        env:
+          JWT_SECRET: test-secret-for-ci-only-1234567890
+        run: npm test
+
+  semgrep:
+    name: SAST (semgrep custom rules)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run semgrep with project security rules
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: _setup/security-rules/express-js.yml
+          # Block on WARNING too (Strict gate), not only ERROR
+          auditOnError: false
+          failOnError: true
+          generateSarif: true
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+
+  audit:
+    name: Dependency audit (npm)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - name: npm audit (fail on high/critical)
+        run: npm audit --audit-level=high

@@ -1,0 +1,69 @@
+rules:
+  - id: js-dangerous-eval
+    severity: ERROR
+    languages: [javascript, typescript]
+    message: "Risky eval/new Function on external or mutable input -> code injection (RCE). Avoid; use a safe parser."
+    pattern-either:
+      - pattern: 'eval($ARG)'
+      - pattern: 'new Function($ARG)'
+
+  - id: js-hardcoded-secret-literal
+    severity: ERROR
+    languages: [javascript, typescript]
+    message: "Hardcoded secret/password literal ($KEY). Use env vars / a secret manager; never commit credentials."
+    patterns:
+      - pattern: '$KEY = "$STR";'
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i)(secret|password|passwd|token|api[_-]?key|authorization|credential|jwt[_-]?secret)$
+      - metavariable-regex:
+          metavariable: $STR
+          regex: (?i)([a-z0-9+/=_\-]){16,}
+    metadata:
+      category: security
+      source: custom
+
+  - id: js-jwt-none-algorithm
+    severity: ERROR
+    languages: [javascript, typescript]
+    message: "JWT signed with none/weak algorithm -> forgeable tokens. Use HS256/RS256."
+    patterns:
+      - pattern: 'jwt.sign($PAYLOAD, $SECRET, { algorithm: $ALG })'
+      - metavariable-regex:
+          metavariable: $ALG
+          regex: (none|'none'|"none")
+
+  - id: js-db-query-unsanitized
+    severity: ERROR
+    languages: [javascript, typescript]
+    message: "SQL built on $DB with possibly request-derived argument ($ANY) -> SQL injection. Use parameterized queries."
+    patterns:
+      - pattern: '$DB.$FUNC($ANY)'
+      - metavariable-regex:
+          metavariable: $DB
+          regex: '(?i)^.*(db|client|conn|connection|pool|sequelize|knex|mysql|pg|sqlite|postgres|redis|mongo(db)?|repo|repository)$'
+      - metavariable-regex:
+          metavariable: $FUNC
+          regex: '^(query|exec|execute|raw|prepare|run|all|get|$where)$'
+
+  - id: js-jwt-secret-weak-default
+    severity: WARNING
+    languages: [javascript, typescript]
+    message: "JWT/auth secret falls back to a hardcoded default ($DEFAULT) -> token forging if env missing. Fail fast and require a real secret from env."
+    patterns:
+      - pattern: '$VAR = process.env.$ENV || $DEFAULT'
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: '(?i).*(secret|token|key|credential).*'
+      - metavariable-regex:
+          metavariable: $DEFAULT
+          regex: '(?i).*(secret|pass(?:word)?|key|token).*'
+
+  - id: js-path-traversal
+    severity: WARNING
+    languages: [javascript, typescript]
+    message: "File API given a possibly request-derived path ($P) -> arbitrary file read. Canonicalize + validate."
+    pattern-either:
+      - pattern: 'res.sendFile($P)'
+      - pattern: 'fs.readFile($P)'
+      - pattern: 'fs.createReadStream($P)'

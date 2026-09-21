@@ -1,0 +1,35 @@
+{
+  "name": "user-todo-app",
+  "version": "1.0.0",
+  "description": "A Todo app with user authentication - AI Coding workflow demo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "jest --verbose --forceExit",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "todo",
+    "auth",
+    "express"
+  ],
+  "author": "AI Coding Workflow Demo",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "jest": "^30.5.1",
+    "supertest": "^7.2.2"
+  },
+  "overrides": {
+    "test-exclude": {
+      "glob": "^10.5.0"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# Build / deps
+node_modules/
+dist/
+
+# App runtime
+app/.uploads/
+app/uploads/
+app/database/data.json
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local gate temp artifacts
+_setup/.semgrep/
+_setup/.tmp/
+_setup/._*
+*.log
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

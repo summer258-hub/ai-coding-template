@@ -1,0 +1,20 @@
+id: aiw-x-powered-by-fingerprint
+info:
+  name: X-Powered-By header present (technology fingerprint leak)
+  author: ai-workflow-demo
+  severity: low
+  description: |
+    Dynamic check that the app does not disclose its front-end / framework
+    stack via the X-Powered-By response header. Presence of the header (e.g.
+    "Express") leaks the technology fingerprint to attackers for targeted
+    exploits. The app hardens this via app.disable('x-powered-by') and
+    helmet.hidePoweredBy; a match here indicates that hardening regressed.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "X-Powered-By"

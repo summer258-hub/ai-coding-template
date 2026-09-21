@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App - 任务管理</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- 登录/注册页面 -->
+  <div id="auth-page" class="auth-container">
+    <div class="auth-box">
+      <h1 id="auth-title">登录</h1>
+      <form id="auth-form">
+        <div class="form-group" id="email-group" style="display:none;">
+          <label>邮箱</label>
+          <input type="email" id="email" placeholder="请输入邮箱">
+        </div>
+        <div class="form-group">
+          <label>用户名</label>
+          <input type="text" id="username" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+          <label>密码</label>
+          <input type="password" id="password" placeholder="请输入密码">
+        </div>
+        <button type="submit" class="btn-primary" id="auth-submit">登录</button>
+      </form>
+      <p class="auth-switch">
+        <span id="switch-text">还没有账号？</span>
+        <a href="#" id="switch-link">立即注册</a>
+      </p>
+      <div id="auth-error" class="error-message" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- 主应用页面 -->
+  <div id="app-page" style="display:none;">
+    <!-- 顶部导航 -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="logo">✅ Todo App</h1>
+        <div class="user-info">
+          <span id="user-display"></span>
+          <button id="logout-btn" class="btn-secondary">退出</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-container">
+      <!-- 左侧边栏：分类 + 标签 -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-header">
+            <h3>分类</h3>
+            <button id="add-category-btn" class="btn-icon" title="添加分类">+</button>
+          </div>
+          <ul id="category-list" class="filter-list">
+            <li class="filter-item active" data-category="all">全部</li>
+            <li class="filter-item" data-category="uncategorized">未分类</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-header">
+            <h3>标签</h3>
+            <button id="add-tag-btn" class="btn-icon" title="添加标签">+</button>
+          </div>
+          <ul id="tag-list" class="tag-list">
+            <li class="tag-item active" data-tag="all">全部</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- 主内容区 -->
+      <main class="main-content">
+        <!-- 搜索和筛选 -->
+        <div class="toolbar">
+          <div class="search-box">
+            <input type="text" id="search-input" placeholder="搜索 Todo...">
+          </div>
+          <div class="filters">
+            <select id="status-filter">
+              <option value="all">全部状态</option>
+              <option value="pending">进行中</option>
+              <option value="completed">已完成</option>
+            </select>
+            <select id="priority-filter">
+              <option value="all">全部优先级</option>
+              <option value="high">高</option>
+              <option value="medium">中</option>
+              <option value="low">低</option>
+            </select>
+            <select id="sort-select">
+              <option value="created_at:desc">最新创建</option>
+              <option value="created_at:asc">最早创建</option>
+              <option value="priority:desc">优先级高→低</option>
+              <option value="priority:asc">优先级低→高</option>
+            </select>
+          </div>
+          <button id="add-todo-btn" class="btn-primary">+ 新建 Todo</button>
+        </div>
+
+        <!-- Todo 列表 -->
+        <div id="todo-list" class="todo-list">
+          <!-- Todo 项将动态生成 -->
+        </div>
+
+        <!-- 分页 -->
+        <div id="pagination" class="pagination">
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Todo 编辑弹窗 -->
+  <div id="todo-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2 id="modal-title">新建 Todo</h2>
+      <form id="todo-form">
+        <div class="form-group">
+          <label>标题 *</label>
+          <input type="text" id="todo-title" placeholder="输入 Todo 标题">
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea id="todo-description" rows="3" placeholder="输入描述（可选）"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>优先级</label>
+            <select id="todo-priority">
+              <option value="low">低</option>
+              <option value="medium" selected>中</option>
+              <option value="high">高</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>分类</label>
+            <select id="todo-category">
+              <option value="">无分类</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>标签</label>
+          <div id="todo-tags" class="tag-checkboxes">
+            <!-- 动态生成 -->
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancel-todo">取消</button>
+          <button type="submit" class="btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 通用确认弹窗 -->
+  <div id="confirm-modal" class="modal" style="display:none;">
+    <div class="modal-content modal-small">
+      <h2 id="confirm-title">确认</h2>
+      <p id="confirm-message">确定要执行此操作吗？</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="confirm-cancel">取消</button>
+        <button class="btn-danger" id="confirm-ok">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分类/标签创建/编辑弹窗 -->
+  <div id="quick-add-modal" class="modal" style="display:none;">
+    <div class="modal-content modal-small">
+      <h2 id="quick-add-title">新建</h2>
+      <form id="quick-add-form">
+        <div class="form-group">
+          <label>名称</label>
+          <input type="text" id="quick-add-input" placeholder="请输入名称" autocomplete="off" maxlength="50">
+        </div>
+        <div class="form-group" id="quick-add-color-group" style="display:none;">
+          <label>颜色</label>
+          <div class="color-picker" id="color-picker">
+            <span class="color-dot color-option" data-color="#667eea" style="background:#667eea"></span>
+            <span class="color-dot color-option" data-color="#e74c3c" style="background:#e74c3c"></span>
+            <span class="color-dot color-option" data-color="#f39c12" style="background:#f39c12"></span>
+            <span class="color-dot color-option" data-color="#27ae60" style="background:#27ae60"></span>
+            <span class="color-dot color-option" data-color="#3498db" style="background:#3498db"></span>
+            <span class="color-dot color-option" data-color="#9b59b6" style="background:#9b59b6"></span>
+            <span class="color-dot color-option" data-color="#1abc9c" style="background:#1abc9c"></span>
+            <span class="color-dot color-option" data-color="#e84393" style="background:#e84393"></span>
+          </div>
+        </div>
+        <div id="quick-add-error" class="error-message" style="display:none;"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="quick-add-cancel">取消</button>
+          <button type="button" class="btn-danger" id="quick-add-delete" style="display:none; margin-right:auto;">删除</button>
+          <button type="submit" class="btn-primary" id="quick-add-submit">创建</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast 容器 -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

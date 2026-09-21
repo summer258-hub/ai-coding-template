@@ -1,0 +1,16 @@
+# Global ignores for the security gate. Keeps the scan fast and low-noise:
+# never scan vendored deps, build output, git internals, or this tooling itself.
+.git/
+node_modules/
+dist/
+build/
+out/
+coverage/
+target/
+_vendor/
+vendor/
+.semgrep/
+*.min.js
+*.min.css
+_security/
+self-test/cases/expected-decoys.js

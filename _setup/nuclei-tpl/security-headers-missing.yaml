@@ -1,0 +1,29 @@
+id: aiw-security-headers-missing
+info:
+  name: Missing common security headers
+  author: ai-workflow-demo
+  severity: low
+  description: |
+    Dynamic check: X-Frame-Options / X-Content-Type-Options / Referrer-Policy
+    and Strict-Transport-Security absent from the landing page response.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: or
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "X-Frame-Options"
+        negative: true
+      - type: word
+        part: header
+        words:
+          - "Strict-Transport-Security"
+        negative: true
+      - type: word
+        part: header
+        words:
+          - "Referrer-Policy"
+        negative: true

@@ -1,0 +1,16 @@
+id: aiw-unauth-api-auth-present
+info:
+  name: Protected API rejects unauthenticated requests
+  author: ai-workflow-demo
+  severity: info
+  description: |
+    Dynamic check that /api/todos (requires JWT) returns 401 without an
+    Authorization header. Absence of 401 would indicate broken auth.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/todos"
+    matchers:
+      - type: status
+        status:
+          - 401

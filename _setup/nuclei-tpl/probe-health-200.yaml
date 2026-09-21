@@ -1,0 +1,13 @@
+id: aiw-probe-health-200
+info:
+  name: Health endpoint returns 200
+  author: ai-workflow-demo
+  severity: info
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/health"
+    matchers:
+      - type: status
+        status:
+          - 200
