@@ -52,6 +52,12 @@ git commit -am "init from template" && git push   # 4) 触发云端 CI
 
 详细流程见 **[docs/PLAYBOOK.md](docs/PLAYBOOK.md)**。
 
+**流程文档索引：**
+- 📋 [九层流程对账清单](docs/checklist-9layers.md) —— 逐层核对手册，开工前必读
+- 🧭 [7 阶段执行手册](docs/PLAYBOOK.md) —— 一步步照着走
+- 🧩 [文档模板](docs/templates/) —— `adr-template.md` / `changelog.md` / `retro-template.md`
+- 📐 [OpenSpec 规格骨架](docs/openspec/README.md)
+
 ## 预置的安全能力
 
 | 能力 | 工具 | 何时生效 |
