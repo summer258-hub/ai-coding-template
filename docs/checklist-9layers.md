@@ -10,9 +10,9 @@
 
 | 层 | 原方案工具 | 等效能力（真实可用） | 模板集成 |
 |----|-----------|---------------------|---------|
-| ① 理解层 | graphify / opsx:explore | `openspec-explore` + 代码阅读/探索 agent | ✅ |
-| ② 对齐层 | grill with docs → context.md + ADR | `brainstorming` + `openspec-new-change` + **ADR 模板** | ⚠️ context.md+ADR 靠执行时生成 |
-| ③ 规划层 | plan eng review / plan ceo review | `writing-plans` / `subagent-driven-development` | ⚠️ 架构审查靠人工+AI 对谈 |
+| ① 理解层 | graphify / opsx:explore | `openspec-explore` + **explore.ps1 静态导航** + **dependency-cruiser 依赖图**（`docs/code-graph.md`） | ✅ |
+| ② 对齐层 | grill with docs → context.md + ADR | `brainstorming` + `openspec-new-change` + **ADR 模板（反证守卫）** | ✅ |
+| ③ 规划层 | plan eng review / plan ceo review | `writing-plans` / `subagent-driven-development` + **architecture-review 审查清单模板** | ✅ |
 | ④ 规格层 | opsx:propose | `openspec-propose` / `openspec-ff-change` | ✅ |
 | ⑤ 实现层 | opsx:apply / implement TDD | `openspec-apply-change` + `test-driven-development` | ✅ |
 | ⑥ 审查层 | code review / review | `requesting-code-review` / `receiving-code-review` | ✅ |
@@ -29,6 +29,8 @@
 - [ ] 已运行 `openspec-explore` 探索变更范围
 - [ ] 已读入口文件、目录结构、关键数据流
 - [ ] 已识别受影响模块（回归风险区）
+- [ ] 已运行 `_setup\explore.ps1` 生成 `docs/KNOWLEDGE.md`（静态导航）
+- [ ] （中大型项目）已用 dependency-cruiser 生成依赖图（见 `docs/code-graph.md`）
 
 ### ② 对齐层 —— 先对齐再动手
 - [ ] 已用 `brainstorming` 对齐需求（What/Who/Why/How good）
@@ -38,6 +40,7 @@
 
 ### ③ 规划层 —— 方案审查
 - [ ] 已用 `writing-plans` 产出实现方案
+- [ ] 已用 `architecture-review-template.md` 做对抗性审查（或交给隔离子代理挑刺）
 - [ ] 方案经审查：架构权衡、备选方案、成本是否说明
 - [ ] ⚠️ 人类参与架构/方向级 review（AI 不单独拍板高风险架构）
 

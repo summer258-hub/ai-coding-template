@@ -23,10 +23,11 @@ ai-coding-template/
 │   ├── package.json             #   依赖 + overrides（安全收紧）
 │   ├── package-lock.json
 │   └── AGENTS.md                #   项目单一事实来源示范
-├── _setup/                      # 本地安全门禁（可复用资产）
+├── _setup/                      # 本地安全门禁 + 工作流工具（可复用资产）
 │   ├── install-gate.ps1         #   一键装 pre-commit / pre-push 钩子
 │   ├── gate-hook.ps1            #   钩子执行器
 │   ├── security-scan.ps1        #   semgrep SAST 扫描
+│   ├── explore.ps1              #   理解层：一键扫描生成 docs/KNOWLEDGE.md 导航
 │   ├── security-rules/          #   semgrep 自定义安全规则
 │   ├── nuclei-tpl/              #   DAST 动态扫描模板
 │   └── self-test/               #   规则正反例自检
@@ -35,6 +36,13 @@ ai-coding-template/
 │   └── dependabot.yml           # 每周依赖/CI 更新
 ├── docs/
 │   ├── PLAYBOOK.md              # ⭐ 7 阶段完整 AI Coding 流程（照着走）
+│   ├── checklist-9layers.md     # 九层流程对账清单
+│   ├── code-graph.md            # 理解层：知识导航 + 依赖图用法
+│   ├── templates/               # 流程文档模板（ADR/changelog/retro/架构审查）
+│   │   ├── adr-template.md
+│   │   ├── changelog.md
+│   │   ├── retro-template.md
+│   │   └── architecture-review-template.md
 │   └── openspec/                # OpenSpec 流程骨架
 └── README.md
 ```
@@ -55,7 +63,8 @@ git commit -am "init from template" && git push   # 4) 触发云端 CI
 **流程文档索引：**
 - 📋 [九层流程对账清单](docs/checklist-9layers.md) —— 逐层核对手册，开工前必读
 - 🧭 [7 阶段执行手册](docs/PLAYBOOK.md) —— 一步步照着走
-- 🧩 [文档模板](docs/templates/) —— `adr-template.md` / `changelog.md` / `retro-template.md`
+- 🧩 [文档模板](docs/templates/) —— `adr-template.md` / `changelog.md` / `retro-template.md` / `architecture-review-template.md`
+- 🗺️ [理解层代码图](docs/code-graph.md) —— 静态导航 + dependency-cruiser 依赖图
 - 📐 [OpenSpec 规格骨架](docs/openspec/README.md)
 
 ## 预置的安全能力
